@@ -43,7 +43,7 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('profile_image')->circular()->size(40)->toggleable(),
+                Tables\Columns\ImageColumn::make('profile_image') ->checkFileExistence(false)->defaultImageUrl(url('default-user.png'))->circular()->size(40)->toggleable(),
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('email')->sortable()->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('phone_number')->sortable()->searchable()->toggleable(),
