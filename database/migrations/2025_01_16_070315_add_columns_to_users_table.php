@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('phone_number');
-            $table->integer('status')->default(0);
-            $table->integer('verified')->default(1);
+            $table->integer('status')->default(1);
+            $table->integer('verified')->default(0);
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('phone_number');
-            $table->integer('status')->default(0);
-            $table->integer('verified')->default(1);
+            $table->integer('status')->default(1);
+            $table->integer('verified')->default(0);
         });
     }
 };
