@@ -44,13 +44,7 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('profile_image')->getStateUsing(function ($record) {
-                    
-                    if ($record->profile_image && file_exists(public_path('storage/'.$record->profile_image))) {
-                        return asset("storage/".$record->profile_image); 
-                    } else {
-                        return asset('default-user.png');
-                    }
-                    
+                    return checkImageExits($record->profile_image);
                 })->circular()->size(40)->toggleable(),
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('email')->sortable()->searchable()->toggleable(),
