@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Filters\TernaryFilter;
 
 class UserResource extends Resource
 {
@@ -48,7 +49,16 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable()
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TernaryFilter::make('email_verified_at')
+                    ->label('Email verification')
+                    ->placeholder('All users')
+                    ->trueLabel('Verified users')
+                    ->falseLabel('Not verified users')
+                    ->queries(
+                        true: fn(Builder $query) => $query->whereNotNull('email_verified_at'),
+                        false: fn(Builder $query) => $query->whereNull('email_verified_at'),
+                        blank: fn(Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
+                    )
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
