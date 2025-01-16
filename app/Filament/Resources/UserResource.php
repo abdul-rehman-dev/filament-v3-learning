@@ -12,7 +12,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\DatePicker;
 
 class UserResource extends Resource
 {
@@ -51,13 +53,39 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('phone_number')->sortable()->searchable()->toggleable(),
                 Tables\Columns\IconColumn::make('verified')->sortable()->toggleable()->boolean(),
                 Tables\Columns\ToggleColumn::make('status')->sortable()->toggleable(),
-                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable()
+                // role coumns with badge coulmns with relation
+                Tables\Columns\TextColumn::make('created_at')->label('Registered At')->dateTime('M Y h:i A')->timezone(auth()->user()->timezone)->sortable()->toggleable()
             ])
-            ->filters([])
+            ->filters([
+                SelectFilter::make('status')
+                    ->options(config('constant.usersModel.status')),
+                SelectFilter::make('verified')
+                    ->options(config('constant.usersModel.verified')),
+                Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('created_from')->label('Registered From'),
+                        DatePicker::make('created_until')->label('Registered Unit'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+                    ->columns(2)
+                ->columnSpanFull()
+            ])->filtersFormColumns(2)
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -78,9 +106,9 @@ class UserResource extends Resource
     {
         return [
             'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'view' => Pages\ViewUser::route('/{record}'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            // 'create' => Pages\CreateUser::route('/create'),
+            // 'view' => Pages\ViewUser::route('/{record}'),
+            // 'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 

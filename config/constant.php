@@ -7,8 +7,8 @@ return [
 
 
     'usersModel' => [
-        "status" => [0 => "Inactive", 1 => "Active"],
-        "verified" => [0 => "Not Verified", 1 => "Verified"],
+        "status" => ["0" => "Inactive", "1" => "Active"],
+        "verified" => ["0" => "Not Verified", "1" => "Verified"],
         "default_user_image" => "default-user.png"
     ],
 
