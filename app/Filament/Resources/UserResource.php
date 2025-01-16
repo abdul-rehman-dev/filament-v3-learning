@@ -43,23 +43,15 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('profile_image')->disk('public')->path('uploads/images/users/{profile_image}')->circular()->toggleable(),
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('email')->sortable()->searchable()->toggleable(),
-                Tables\Columns\TextColumn::make('email_verified_at')->dateTime()->sortable()->toggleable(),
+                Tables\Columns\TextColumn::make('phone_number')->sortable()->searchable()->toggleable(),
+                Tables\Columns\TextColumn::make('verified')->sortable()->searchable()->toggleable(),
+                Tables\Columns\TextColumn::make('status')->sortable()->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable()
             ])
-            ->filters([
-                TernaryFilter::make('email_verified_at')
-                    ->label('Email verification')
-                    ->placeholder('All users')
-                    ->trueLabel('Verified users')
-                    ->falseLabel('Not verified users')
-                    ->queries(
-                        true: fn(Builder $query) => $query->whereNotNull('email_verified_at'),
-                        false: fn(Builder $query) => $query->whereNull('email_verified_at'),
-                        blank: fn(Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
-                    )
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -67,9 +59,7 @@ class UserResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
                 ]),
             ])
             ->recordUrl(null);
