@@ -42,21 +42,10 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('name')->sortable()->searchable()->toggleable(),
+                Tables\Columns\TextColumn::make('email')->sortable()->searchable()->toggleable(),
+                Tables\Columns\TextColumn::make('email_verified_at')->dateTime()->sortable()->toggleable(),
+                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable()
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -64,6 +53,7 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -71,7 +61,8 @@ class UserResource extends Resource
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->recordUrl(null);
     }
 
     public static function getRelations(): array
