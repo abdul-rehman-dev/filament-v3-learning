@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('phone_number');
-            $table->enum('status', ['Active', 'Inactive'])->default('Active');
-            $table->enum('verified', ['Verified', 'Not Verified'])->default('Not Verified');
+            $table->integer('status')->default(0);
+            $table->integer('verified')->default(1);
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('phone_number');
-            $table->enum('status', ['Active', 'Inactive'])->default('Active');
-            $table->enum('verified', ['Verified', 'Not Verified'])->default('Not Verified');
+            $table->integer('status')->default(0);
+            $table->integer('verified')->default(1);
         });
     }
 };

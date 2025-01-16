@@ -43,12 +43,21 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('profile_image')->disk('public')->path('uploads/images/users/{profile_image}')->circular()->toggleable(),
+                Tables\Columns\ImageColumn::make('profile_image')->circular()->size(40)->toggleable(),
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('email')->sortable()->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('phone_number')->sortable()->searchable()->toggleable(),
-                Tables\Columns\TextColumn::make('verified')->sortable()->searchable()->toggleable(),
-                Tables\Columns\TextColumn::make('status')->sortable()->searchable()->toggleable(),
+                Tables\Columns\IconColumn::make('verified')->sortable()->searchable()->toggleable()
+                ->icon(fn (string $state): string => match ($state) {
+                    'Not Verified' => 'heroicon-o-x-circle',
+                    'Verified' => 'heroicon-o-check-circle',
+                })
+                ->color(fn (string $state): string => match ($state) {
+                    'Not Verified' => 'warning',
+                    'Verified' => 'success',
+                }),
+                Tables\Columns\ToggleColumn::make('status')->sortable()->searchable()->toggleable(),
+                
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable()
             ])
             ->filters([])
