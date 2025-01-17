@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Filament\Forms\Components\DatePicker;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        DatePicker::configureUsing(fn(DatePicker $component) => $component->placeholder("dd/mm/yyyy")->native(false)->displayFormat('d/m/Y'));
         Schema::defaultStringLength(191);
     }
 }

@@ -38,6 +38,11 @@ class UserResource extends Resource
                     ->password()
                     ->required()
                     ->maxLength(255),
+                Forms\Components\Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable(),
             ]);
     }
 
@@ -54,7 +59,7 @@ class UserResource extends Resource
                 Tables\Columns\IconColumn::make('verified')->sortable()->toggleable()->boolean(),
                 Tables\Columns\ToggleColumn::make('status')->sortable()->toggleable(),
                 // role coumns with badge coulmns with relation
-                Tables\Columns\TextColumn::make('created_at')->label('Registered At')->dateTime('M Y h:i A')->timezone(auth()->user()->timezone)->sortable()->toggleable()
+                Tables\Columns\TextColumn::make('created_at')->label('Registered At')->dateTime('d/m/Y h:i A')->timezone(auth()->user()->timezone)->sortable()->toggleable()
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -78,7 +83,7 @@ class UserResource extends Resource
                             );
                     })
                     ->columns(2)
-                ->columnSpanFull()
+                    ->columnSpanFull()
             ])->filtersFormColumns(2)
             ->actions([
                 Tables\Actions\ActionGroup::make([

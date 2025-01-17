@@ -18,6 +18,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Support\Enums\MaxWidth;
+use Filament\Forms\Components\DatePicker;
+use App\Filament\Auth\CustomRegister;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -28,6 +30,10 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration(CustomRegister::class) 
+            ->passwordReset()
+            ->emailVerification()
+            ->profile()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -58,7 +64,9 @@ class AdminPanelProvider extends PanelProvider
             ->maxContentWidth(MaxWidth::Full)
             ->sidebarWidth('18rem')
             ->sidebarCollapsibleOnDesktop()
-            ->collapsedSidebarWidth('9rem');
-
+            ->collapsedSidebarWidth('9rem')
+            ->plugins([
+                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
+            ]);
     }
 }
