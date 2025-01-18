@@ -51,13 +51,13 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('profile_image')->getStateUsing(function ($record) {
-                    return checkImageExits($record->profile_image);
+                    return checkImageExits($record->profile_image, 'user');
                 })->circular()->size(40)->toggleable(),
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('email')->sortable()->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('phone_number')->sortable()->searchable()->toggleable(),
                 Tables\Columns\IconColumn::make('verified')->sortable()->toggleable()->boolean(),
-                Tables\Columns\ToggleColumn::make('status')->sortable()->toggleable(),
+                Tables\Columns\ToggleColumn::make('status')->sortable()->toggleable()->visible(fn() => auth()->user()->roles[0]->id <= config('constant.role.admin_id')),
                 // role coumns with badge coulmns with relation
                 Tables\Columns\TextColumn::make('created_at')->label('Registered At')->dateTime('d/m/Y h:i A')->timezone(auth()->user()->timezone)->sortable()->toggleable()
             ])

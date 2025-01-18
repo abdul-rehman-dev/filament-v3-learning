@@ -6,7 +6,12 @@ return [
 
     "placeholder_image" => "placeholder.jpg",
 
-    "default_role" => "editor",
+
+    "role" => [
+        "default" => "editor",
+        "admin" => "admin",
+        "admin_id" => "2"
+    ],
 
     "usersModel" => [
         "status" => ["0" => "Inactive", "1" => "Active"],

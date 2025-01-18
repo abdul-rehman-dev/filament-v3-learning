@@ -10,7 +10,7 @@ class CustomRegister extends Register
     protected function handleRegistration(array $data): Model
     {
         $user = $this->getUserModel()::create($data);
-        $user->assignRole('editor');
+        $user->assignRole(config('constant.role.default'));
 
         return $user;
     }
