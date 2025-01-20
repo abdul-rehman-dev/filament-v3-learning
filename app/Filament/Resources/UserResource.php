@@ -73,6 +73,15 @@ class UserResource extends Resource
                     }),
                 Tables\Columns\TextColumn::make('created_at')->label('Registered At')->dateTime('d/m/Y h:i A')->timezone(auth()->user()->timezone)->sortable()->toggleable()
             ])
+            ->modifyQueryUsing(function (Builder $query) {
+                if (!auth()->user()->hasRole(['Super Admin', 'Admin'])) {
+
+                    $query->whereHas('roles', function ($query) {
+                        $query->where('roles.name', '!=', 'Super Admin');
+                        $query->where('roles.name', '!=', 'Admin');
+                    });
+                }
+            })
             ->filters([
                 SelectFilter::make('status')
                     ->options(config('constant.usersModel.status')),
