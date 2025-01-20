@@ -21,6 +21,7 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'User Management';
 
     public static function form(Form $form): Form
     {
@@ -58,7 +59,18 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('phone_number')->sortable()->searchable()->toggleable(),
                 Tables\Columns\IconColumn::make('verified')->sortable()->toggleable()->boolean(),
                 Tables\Columns\ToggleColumn::make('status')->sortable()->toggleable()->visible(fn() => auth()->user()->roles[0]->id <= config('constant.role.admin_id')),
-                // role coumns with badge coulmns with relation
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->label('Role')
+                    ->sortable()
+                    ->toggleable()
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'Super Admin' => 'primary',
+                        'Admin' => 'success',
+                        'Editor' => 'info',
+                        'User' => 'danger',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('created_at')->label('Registered At')->dateTime('d/m/Y h:i A')->timezone(auth()->user()->timezone)->sortable()->toggleable()
             ])
             ->filters([
@@ -97,6 +109,7 @@ class UserResource extends Resource
                     Tables\Actions\DeleteBulkAction::make()
                 ]),
             ])
+            ->recordAction(null)
             ->recordUrl(null);
     }
 
