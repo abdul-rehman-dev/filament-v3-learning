@@ -58,7 +58,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')->sortable()->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('phone_number')->sortable()->searchable()->toggleable(),
                 Tables\Columns\IconColumn::make('verified')->sortable()->toggleable()->boolean(),
-                Tables\Columns\ToggleColumn::make('status')->sortable()->toggleable()->visible(fn() => auth()->user()->roles[0]->id <= config('constant.role.admin_id')),
+                Tables\Columns\ToggleColumn::make('status')->sortable()->toggleable()->visible(fn() => auth()->user()->hasRole(['Super Admin', 'Admin'])),
                 Tables\Columns\TextColumn::make('roles.name')
                     ->label('Role')
                     ->sortable()
